@@ -40,11 +40,11 @@ public class UserMealsUtil {
         for (UserMeal meal : meals) {
             boolean isInInterval = isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime);
             if (isInInterval) {
-                boolean excess = sumCaloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay;
+                boolean excessCalories = sumCaloriesPerDayMap.get(meal.getDateTime().toLocalDate()) > caloriesPerDay;
                 userMealWithExcessList.add(new UserMealWithExcess(meal.getDateTime(),
                         meal.getDescription(),
                         meal.getCalories(),
-                        excess));
+                        excessCalories));
             }
         }
         return userMealWithExcessList;
