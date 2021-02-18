@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -70,6 +72,18 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
+            case "filter":
+                log.info("getFiltered");
+                LocalDate startDate = isEmpty(request.getParameter("startDate")) ?
+                        LocalDate.MIN : LocalDate.parse(request.getParameter("startDate"));
+                LocalDate endDate = isEmpty(request.getParameter("endDate")) ?
+                        LocalDate.MAX : LocalDate.parse(request.getParameter("endDate"));
+                LocalTime startTime = isEmpty(request.getParameter("startTime")) ?
+                        LocalTime.MIN : LocalTime.parse(request.getParameter("startTime"));
+                LocalTime endTime = isEmpty(request.getParameter("endTime")) ?
+                        LocalTime.MAX : LocalTime.parse(request.getParameter("endTime"));
+                request.setAttribute("meals", controller.getBetween(startDate, endDate, startTime, endTime));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
             case "all":
             default:
                 log.info("getAll");
@@ -82,5 +96,9 @@ public class MealServlet extends HttpServlet {
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
         return Integer.parseInt(paramId);
+    }
+
+    private boolean isEmpty(String str) {
+        return str == null || "".equals(str);
     }
 }
