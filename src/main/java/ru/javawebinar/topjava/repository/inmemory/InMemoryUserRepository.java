@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -47,7 +46,7 @@ public class InMemoryUserRepository implements UserRepository {
     public List<User> getAll() {
         log.info("getAll");
         return repository.values().stream()
-                .sorted(Comparator.comparing(User::getName))
+                .sorted(Comparator.comparing(User::getName).thenComparing((User::getEmail)))
                 .collect(Collectors.toList());
     }
 
@@ -56,7 +55,7 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("getByEmail {}", email);
         return repository.values().stream()
                 .filter(user -> user.getEmail().equals(email))
-                .findAny()
-                .orElseThrow(() -> new NotFoundException("User with email= " + email + " does not exist"));
+                .findFirst()
+                .orElse(null);
     }
 }

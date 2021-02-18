@@ -38,14 +38,14 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
-
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+        Meal meal = new Meal(null,
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
-        if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
+        if (id == null || id.isEmpty()) {
             controller.create(meal);
         } else {
+            meal.setId(Integer.valueOf(id));
             controller.update(meal, Integer.parseInt(id));
         }
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
