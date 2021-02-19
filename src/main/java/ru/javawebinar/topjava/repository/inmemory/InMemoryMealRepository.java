@@ -7,13 +7,11 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
@@ -37,10 +35,11 @@ public class InMemoryMealRepository implements MealRepository {
             return meal;
         }
         Meal mealFromDb = repository.get(meal.getId());
-        return mealFromDb != null && mealFromDb.getUserId() == userId ? repository.computeIfPresent(meal.getId(), (id, value) -> {
-            meal.setUserId(userId);
-            return meal;
-        }) : null;
+        return mealFromDb != null && mealFromDb.getUserId() == userId ?
+                repository.computeIfPresent(meal.getId(), (id, value) -> {
+                    meal.setUserId(userId);
+                    return meal;
+                }) : null;
     }
 
     @Override
@@ -64,11 +63,11 @@ public class InMemoryMealRepository implements MealRepository {
     }
 
     @Override
-    public List<Meal> getBetween(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public List<Meal> getBetween(int userId, LocalDate startDate, LocalDate endDate) {
         List<Meal> result = getAll(userId).stream()
-                .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(), startTime, endTime))
                 .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDate(), startDate, endDate))
-                .collect(Collectors.toList());
+                .sorted(comparing(Meal::getDateTime).reversed())
+                .collect(toList());
         return result.isEmpty() ? Collections.emptyList() : result;
     }
 }

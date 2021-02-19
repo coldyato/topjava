@@ -7,7 +7,6 @@ import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
@@ -40,7 +39,7 @@ public class MealService {
         return MealsUtil.getTos(repository.getAll(userId), caloriesPerDay);
     }
 
-    public List<Meal> getBetween(int authUserId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return repository.getBetween(authUserId, startDate, endDate, startTime, endTime);
+    public List<Meal> getBetween(int authUserId, LocalDate startDate, LocalDate endDate) {
+        return repository.getBetween(authUserId, startDate, endDate);
     }
 }
