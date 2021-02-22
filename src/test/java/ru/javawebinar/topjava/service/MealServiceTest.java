@@ -77,6 +77,12 @@ public class MealServiceTest {
         assertMatch(mealService.getBetweenInclusive(LocalDate.of(2015, Month.MAY, 27),
                 LocalDate.of(2015, Month.MAY, 29), USER_ID), MEAL1);
     }
+
+    @Test
+    public void sortBetweenInclusive() {
+        assertMatch(mealService.getBetweenInclusive(LocalDate.of(2015, Month.MAY, 1),
+                LocalDate.of(2015, Month.JUNE, 30), USER_ID), MEALS_USER);
+    }
     // end region
 
     // region negative
