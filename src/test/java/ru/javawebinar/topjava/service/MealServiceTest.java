@@ -10,14 +10,10 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.Util;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.of;
 import static org.junit.Assert.assertThrows;
@@ -114,7 +110,8 @@ public class MealServiceTest {
 
     @Test
     public void updateByNotOwnerAsNotFound() {
-        assertThrows(NotFoundException.class, () -> mealService.update(meal1, ADMIN_ID));
+        Meal meal = new Meal(meal1.getId(), meal1.getDateTime(), meal1.getDescription(), meal1.getCalories());
+        assertThrows(NotFoundException.class, () -> mealService.update(meal, ADMIN_ID));
     }
     // endregion
 
@@ -158,10 +155,7 @@ public class MealServiceTest {
     public void getBetweenInclusiveInScope() {
         LocalDate startDate = LocalDate.of(2015, Month.MAY, 20);
         LocalDate endDate = LocalDate.of(2015, Month.MAY, 30);
-        List<Meal> meals = userMeals.stream()
-                .filter(meal -> Util.isBetweenHalfOpen(meal.getDate(), startDate, endDate.plus(1, ChronoUnit.DAYS)))
-                .collect(Collectors.toList());
-        assertMatch(mealService.getBetweenInclusive(startDate, endDate, USER_ID), meals);
+        assertMatch(mealService.getBetweenInclusive(startDate, endDate, USER_ID), meal3, meal2, meal1);
     }
     // endregion
 }
