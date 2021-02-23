@@ -40,4 +40,12 @@ public class MealTestData {
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
+
+    public static Meal getUpdated() {
+        return new Meal(MEAL_USER_ID, of(2015, Month.APRIL, 30, 13, 0), "updated", 4000);
+    }
+
+    public static Meal getCreated() {
+        return new Meal(null, of(2015, Month.JUNE, 30, 3, 0), "create", 4000);
+    }
 }

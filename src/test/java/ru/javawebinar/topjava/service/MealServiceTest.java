@@ -96,9 +96,8 @@ public class MealServiceTest {
     // region update meal
     @Test
     public void update() {
-        Meal updated = new Meal(MEAL_USER_ID, of(2015, Month.APRIL, 30, 13, 0), "updated", 4000);
-        mealService.update(updated, USER_ID);
-        assertMatch(mealService.get(MEAL_USER_ID, USER_ID), updated);
+        mealService.update(getUpdated(), USER_ID);
+        assertMatch(mealService.get(MEAL_USER_ID, USER_ID), getUpdated());
     }
 
     @Test
@@ -122,10 +121,12 @@ public class MealServiceTest {
     // region create meal
     @Test
     public void create() {
-        Meal meal = new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "created", 300);
-        Meal create = mealService.create(meal, USER_ID);
+        Meal meal = getCreated();
+        Meal create = mealService.create(getCreated(), USER_ID);
         meal.setId(create.getId());
+        assertMatch(create, meal);
         assertMatch(mealService.get(create.getId(), USER_ID), meal);
+        assertMatch(mealService.getAll(USER_ID), meal, meal7, meal6, meal5, meal4, meal3, meal2, meal1);
     }
 
     @Test
